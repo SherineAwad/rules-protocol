@@ -32,6 +32,6 @@ for record in screed.open(reads):
 
 confidence = float (supXY) /float (supX)
 
-#if confidence  > 0.5 :
+if confidence  > 0.5 :
     #confidence of low quality reads implies ==> unalignment 
-print confidence, supXY, supX,  'low quality implies unalignment '
+    print confidence, supXY, supX,  'low quality implies unalignment '
