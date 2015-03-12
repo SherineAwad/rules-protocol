@@ -25,12 +25,13 @@ for record in screed.open(reads):
      for ch in q:
           qc += ord(ch) # A simple score for the read -- will be changed later
      if qc < qc_cutoff  :
-         supX+= 1  #support of low quality reads  
+         supX += 1  #support of low quality reads  
          if n in un: 
-             supXY+=1  #support of low quality reads implies ==> unalignment  
+             supXY +=1  #support of low quality reads implies ==> unalignment  
              print '> %s \n %s \n %s \n %s' % (record.name,  record.sequence, record.accuracy,  qc)
 
-confidence = float (supXY/supX)
+confidence = float (supXY) /float (supX)
 
-if confidence  > 0.5 :  #confidence of low quality reads implies ==> unalignment 
-    print confidence, supXY, supX,  'low quality implies unalignment '
+#if confidence  > 0.5 :
+    #confidence of low quality reads implies ==> unalignment 
+print confidence, supXY, supX,  'low quality implies unalignment '
