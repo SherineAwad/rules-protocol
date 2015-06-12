@@ -6,6 +6,16 @@ REFERENCE = /mnt/home/data/mircea.fa.gz
 ASSEMBLER = velvet
 
 
+generator: quality-filter \
+	countingtable \
+	quasting \
+	unaligned \
+	low-quality \
+	low-abundance \
+	low-coverage \
+	repeats \
+	rules
+
 quality-filter: ${DATA}/${PREFIX}-1.fastq.gz  ${DATA}/${PREFIX}-2.fastq.gz
 	interleaving-1 \
 	interleaving-2 \
@@ -51,7 +61,15 @@ low-quality: ${DATA}/${PREFIX}.fastq.gz
 	python low-quality.py ${DATA}/${PREFIX}.fastq.gz > ${CURRENT}/${PREFIX}.low
 
 low-abundance: ${DATA}/${PREFIX}.fastq.gz ${CURRENT}/normC5k20.kh 
-	python low-abundance.py ${CURRENT}/normC5k20.kh  ${DATA}/${PREFIX}.fastq.gz> ${CURRENT}/${PREFIX}.abundance
+	python low-abundance.py ${CURRENT}/normC5k20.kh  ${DATA}/${PREFIX}.fastq.gz> ${CURRENT}/${PREFIX}.abundance.low
+
+low-coverage:  ${CURRENT}/normC5k20.kh 
+	${KHMER}/sandbox/slice-reads-by-coverage.py  ${CURRENT}/normC5k20.kh ${CURRENT}/${PREFIX}.fastq.gz  ${CURRENT}/${PREFIX}.coverage.fa -m 20 -M 40
+	grep '^\@SRR' ${CURRENT}/${PREFIX}.coverage.fa | cut -c2-  >${CURRENT}/${PREFIX}.coverage.low 
+
+repeats: 
+	${KHMER}/sandbox/slice-reads-by-coverage.py ${CURRENT}/normC5k20.kh ${CURRENT}/${PREFIX}.fastq.gz ${CURRENT}/${PREFIX}.repeats.fa -m 50
+	grep '^\@SRR' ${CURRENT}/${PREFIX}.repeats.fa | cut -c2-  >${CURRENT}/${PREFIX}.repeats
 
 rules: ${CURRENT}/${ASSEMBLER}.pe.unaligned
 	python rules.py ${CURRENT}/${ASSEMBLER}.pe.unaligned > ${CURRENT}/${ASSEMBLER}.rules
