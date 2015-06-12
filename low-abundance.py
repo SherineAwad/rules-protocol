@@ -104,7 +104,7 @@ def main():
         trim_seq, trim_at = htable.trim_on_abundance(seq, args.cutoff)
 
         if trim_at >= ksize:
-            print name, '-', seq
+            print name
 
         return None, None
 
