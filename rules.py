@@ -14,17 +14,22 @@ for record in screed.open(unaligned):
     n = n + '\n'
     un.add(n)
 
+supY = len(un)
+print supY
 supX = 0
 supXY =0
 confidence = 0
+
 for line in open ('qc.low'): 
        name = line
        supX +=1  #support of low quality reads
        if name in un: 
    	     supXY +=1 #support of low quality reads implies => unalignment  
-
+lift = float (supXY) / ( float(supX) * float (supY) )
 confidence = float (supXY) / float (supX) 
-print 'low quality => unalignment', confidence, supXY, supX
+conviction = float (1 - supXY) / float (1- confidence)
+print 'Rule', 'Confidence', 'Lift','Conviction',  'SupXY', 'SupX', 'SupY'
+print 'low quality => unalignment', confidence, lift, conviction,  supXY, supX, supY
 
 supX = 0
 supXY =0 
@@ -37,7 +42,9 @@ for line in open ('repeats'):
              supXY +=1 #support of repeats reads implies => unalignment
 
 confidence = float (supXY) / float (supX)
-print 'repeats => unalignment', confidence, supXY, supX
+lift = float (supXY) / ( float (supX) * float (supY) ) 
+conviction = float (1 - supXY) / float (1- confidence)
+print 'repeats => unalignment', confidence, lift, conviction, supXY, supX, supY
 
 
 supX = 0
@@ -49,8 +56,10 @@ for line in open ('abundance.low'):
        if name in un:
              supXY +=1 #support of low abundance reads implies => unalignment
 
+lift = float (supXY) / ( float (supX) * float (supY) )
 confidence = float (supXY) / float (supX)
-print 'low abundance => unalignment', confidence, supXY, supX 
+conviction = float (1 - supXY) / float (1- confidence)
+print 'low abundance => unalignment', confidence, lift, conviction, supXY, supX, supY 
 
 supX = 0
 supXY =0
@@ -62,5 +71,7 @@ for line in open ('coverage.low'):
        if name in un:
              supXY +=1 #support of low abundance reads implies => unalignment
 
+lift = float (supXY) / ( float (supX) * float (supY) )
 confidence = float (supXY) / float (supX)
-print 'low coverage => unalignment', confidence, supXY, supX 
+conviction = float (1 - supXY) / float (1- confidence)
+print 'low coverage => unalignment', confidence, lift, conviction, supXY, supX, supY
