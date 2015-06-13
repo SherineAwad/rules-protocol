@@ -3,35 +3,75 @@ import sys
 import screed
 
 unaligned = sys.argv[1]
-reads = sys.argv[2]
-
-
-qc_cutoff  = 5000 #cutoff for a low quality 
-supX = 0
-supXY = 0
-
-
+qc =set () 
 un = set ()
+
+rule = {}
+
+
 for record in screed.open(unaligned): 
-    n = record.name 
-    un.add(n)   
+    n = record.name
+    n = n + '\n'
+    un.add(n)
+
+supY = len(un)
+print supY
+supX = 0
+supXY =0
+confidence = 0
+
+for line in open ('qc.low'): 
+       name = line
+       supX +=1  #support of low quality reads
+       if name in un: 
+   	     supXY +=1 #support of low quality reads implies => unalignment  
+lift = float (supXY) / ( float(supX) * float (supY) )
+confidence = float (supXY) / float (supX) 
+conviction = float (1 - supXY) / float (1- confidence)
+print 'Rule', 'Confidence', 'Lift','Conviction',  'SupXY', 'SupX', 'SupY'
+print 'low quality => unalignment', confidence, lift, conviction,  supXY, supX, supY
+
+supX = 0
+supXY =0 
+confidence = 0
+
+for line in open ('repeats'):
+       name = line
+       supX +=1  #support of repeats reads
+       if name in un:
+             supXY +=1 #support of repeats reads implies => unalignment
+
+confidence = float (supXY) / float (supX)
+lift = float (supXY) / ( float (supX) * float (supY) ) 
+conviction = float (1 - supXY) / float (1- confidence)
+print 'repeats => unalignment', confidence, lift, conviction, supXY, supX, supY
 
 
-for record in screed.open(reads):
-     n = record.name
-     s = record.sequence
-     q = record.accuracy
-     qc = 0
-     for ch in q:
-          qc += ord(ch) # A simple score for the read -- will be changed later
-     if qc < qc_cutoff  :
-         supX += 1  #support of low quality reads  
-         if n in un: 
-             supXY +=1  #support of low quality reads implies ==> unalignment  
-             print '> %s \n %s \n %s \n %s' % (record.name,  record.sequence, record.accuracy,  qc)
+supX = 0
+supXY =0
+confidence = 0     
+for line in open ('abundance.low'):
+       name = line
+       supX +=1  #support of low abundance reads
+       if name in un:
+             supXY +=1 #support of low abundance reads implies => unalignment
 
-confidence = float (supXY) /float (supX)
+lift = float (supXY) / ( float (supX) * float (supY) )
+confidence = float (supXY) / float (supX)
+conviction = float (1 - supXY) / float (1- confidence)
+print 'low abundance => unalignment', confidence, lift, conviction, supXY, supX, supY 
 
-if confidence  > 0.5 :
-    #confidence of low quality reads implies ==> unalignment 
-    print confidence, supXY, supX,  'low quality implies unalignment '
+supX = 0
+supXY =0
+confidence = 0
+for line in open ('coverage.low'):
+       name = line.split('-')
+       name = name[0]
+       supX +=1  #support of low coverage reads
+       if name in un:
+             supXY +=1 #support of low abundance reads implies => unalignment
+
+lift = float (supXY) / ( float (supX) * float (supY) )
+confidence = float (supXY) / float (supX)
+conviction = float (1 - supXY) / float (1- confidence)
+print 'low coverage => unalignment', confidence, lift, conviction, supXY, supX, supY
