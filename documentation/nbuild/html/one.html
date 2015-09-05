@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Step One &mdash; Rules Protocols 0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Rules Protocols 0 documentation" href="index.html" />
+    <link rel="next" title="Scripts Auto Generated Documentation" href="autodoc.html" />
+    <link rel="prev" title="Welcome to Rules Protocols’s documentation!" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="step-one">
+<h1>Step One<a class="headerlink" href="#step-one" title="Permalink to this headline">¶</a></h1>
+<ol class="arabic">
+<li><p class="first">Load reads into a counting table</p>
+<blockquote>
+<div><p>load-into-counting.py -x 1e8 -k 20 out.ct SRR606249_4m1.fastq</p>
+</div></blockquote>
+</li>
+<li><p class="first">Getting reads with low-abundance kmers</p>
+<blockquote>
+<div><p>run low-abundance.py:  a modified script from filt-below-abund.py</p>
+<p>python low-abundance.py -C 2 out.ct  SRR606249_4m1.fastq &gt;  abundance.low</p>
+</div></blockquote>
+</li>
+<li><p class="first">Getting reads with low coverage:</p>
+<blockquote>
+<div><p>sandbox/slice-reads-by-coverage.py out.ct SRR606249_4m1.fastq  coverage.fa -m 20 -M 40</p>
+<p>grep &#8216;^&#64;SRR&#8217; coverage.fa | cut -c2-  &gt;coverage.low</p>
+</div></blockquote>
+</li>
+<li><p class="first">Getting reads with high coverage representing repeats:</p>
+<blockquote>
+<div><p>/sandbox/slice-reads-by-coverage.py out.ct SRR606249_4m1.fastq  repeats.fa -m 200</p>
+<p>grep &#8216;^&#64;SRR&#8217; repeats.fa | cut -c2-  &gt;repeats.low</p>
+</div></blockquote>
+</li>
+<li><p class="first">Getting reads with low quality bases using phred score</p>
+<blockquote>
+<div><p>low-quality.py SRR606249_4m1.fastq &gt; qc.low</p>
+</div></blockquote>
+</li>
+<li><dl class="first docutils">
+<dt>Run generate rules to find rules that leads to unalignment</dt>
+<dd><p class="first last">python rules.py unalignment.fa &gt; rules.txt
+It reads  all .low file including qc.low, abundance.low, coverage.low and repeats.low</p>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Rules Protocols&#8217;s documentation!</a></li>
+      <li>Next: <a href="autodoc.html" title="next chapter">Scripts Auto Generated Documentation</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/one.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Sherine Awad.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/one.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
